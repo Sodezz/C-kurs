@@ -1,0 +1,261 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <fstream>
+#include <stdio.h> 
+#include <string.h> 
+#include <iomanip>
+#include <string>
+#include <cctype>
+#include <windows.h>
+#include <vector>
+#include <algorithm> 
+#include <locale.h>
+
+using namespace std;
+string text;
+
+int FillText()
+{
+	cout << "Введите текст: ";
+	cin >> text;
+	return 0;
+	system("pause");
+
+}
+int ReplaceWordsUp() {
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	system("chcp 1251");
+	system("cls");
+	setlocale(LC_ALL, "Russian_Russia.1251");
+
+	char s[256];
+	cout << "Ставьте . в конце текста! \n";
+	cout << "Введите текст:\n";
+	cin.getline(s, 256, '.');
+
+	for (int i = 0; s[i]; i++)
+		if (islower(s[i])) s[i] = toupper(s[i]);
+
+	cout << s << "\n";
+
+	system("pause");
+	return 0;
+}
+
+int ReplaceWordsDown() {
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	setlocale(LC_ALL, "rus");
+	setlocale(0, ".1251");
+	char s[256];
+	cout << "Ставьте . в конце текста! \n";
+	cout << "Введите текст:\n";
+	cin.getline(s, 256, '.');
+
+	for (int i = 0; s[i]; i++)
+		if (isupper(s[i])) s[i] = tolower(s[i]);
+
+	cout << s << "\n";
+
+	system("pause");
+	return 0;
+}
+
+int CalcWords() {
+	size_t max = 0;
+	char str[255];
+	char* word = nullptr;
+	char symbol;
+	cout << "Ставьте . в конце текста! \n";
+	cout << "Введите текст:" << "\n";
+	cin.getline(str, 255, '.');
+	cout << "Выбирите символ:" << "\n";
+	cin >> symbol;
+	cout << "Слова оканчивающиеся на заданный символ:" << endl;
+	word = strtok(str, " ,.-!?");
+	while (word != nullptr)
+	{
+		if (word[strlen(word) - 1] == symbol)
+			cout << word << endl;
+		word = strtok(nullptr, " ,.-!?");
+	}
+	system("pause");
+	return 0;
+}
+
+int SortWords() {
+
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	setlocale(LC_ALL, "Russian");
+
+	vector <string> arr;
+	string word;
+
+	cout << " Чтобы отсортировать слова введите слово: 'stop' \n";
+	cout << " Введите слова: \n";
+
+	while (cin >> word) {
+		if (word == "stop") break;
+		arr.push_back(word);
+	}
+
+	sort(arr.begin(), arr.end());
+
+	for (int i = 0; i < arr.size(); i++) {
+		cout << arr[i] << endl;
+	}
+
+	system("pause");
+	return 0;
+}
+
+//Сохраняем текст в файл
+void SaveText()
+{
+	string path;
+
+	cout << "Укажите имя файла: ";
+
+	cin >> path;
+
+	ofstream fout(path.c_str());
+
+	if (fout.fail())
+	{
+		cout << "\nОшибка открытия файла";
+		exit(1);
+	}
+	fout << text << " ";
+	
+	fout.close();
+	cout << "Текст сохранился!\n";
+	system("pause");
+}
+
+// Функция возвращает NULL в случае ошибочного содержимого
+int ReadText()
+{
+	string   name;
+	string x;
+	ifstream file;
+
+
+		cout << "Укажите имя файла с исходным текстом: ";
+		cin >> name;
+		file.open(name, ios::in);
+		while (!file.is_open()) {
+			cerr << "Ошибка открытия файла!\n";
+			cin.ignore();
+		}
+		int i = 0;
+		static char mass[1024][1024];
+		while (!file.eof()) {
+			file.get(mass[i], sizeof(mass));
+			cout << "Текст, введенный с файла : " << mass[i] << "\n";
+
+			++i;
+		}
+	
+
+	file.close();
+	system("pause");
+	return 0;
+}
+
+int main2()
+{
+	int selection;
+
+
+
+	for (;;)
+	{
+		system("cls");
+
+		cout << "Выберите функцию:\n"
+			"1. Сортировка слов по алфавиту.\n"
+			"2. Замена строчных символов прописными. \n"
+			"3. Замена прописных символов строчными. \n"
+			"4. Подсчет количества слов, заканчивающихся заданным символом. \n"
+			"5. Сохранить текст в файл.\n";
+
+		cin >> selection;
+
+		switch (selection)
+		{
+		case 1:
+			SortWords();
+			continue;
+
+		case 2:
+			ReplaceWordsUp();
+			continue;
+
+		case 3:
+			ReplaceWordsDown();
+			continue;
+
+		case 4:
+			CalcWords();
+			continue;
+
+		case 5:  
+			SaveText();
+			continue;
+
+		default:
+			cout << "Такого пункта не существует!\n";
+			continue;
+		}
+		system("pause");
+	}
+}
+
+
+int main() {
+
+	int selection;
+
+	setlocale(LC_ALL, "ru");
+
+	for (;;)
+	{
+		system("cls");
+		cout << "Выберите функцию:\n"
+			"1. Чтение текста с консоли.\n"
+			"2. Чтение текста из файла.\n"
+			"3. Выход из программы.\n";
+
+		cin >> selection;
+
+		switch (selection)
+		{
+
+		case 1:
+
+			//Ввод текста с консоли
+		    FillText();
+			break;
+			
+		case 2:
+
+			//Считывание текста с файла
+			ReadText();
+			break;
+
+		case 3:
+			return 0;
+
+		default:
+			cout << "Такого пункта не существует!\n";
+			system("pause");
+			continue;
+
+		}
+		//Вывод текста и переход на второе меню
+		main2();
+		system("pause");
+	}
+}
